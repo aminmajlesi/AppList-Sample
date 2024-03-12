@@ -7,9 +7,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class AppInstalledAdapter(private val itemList: List<AppModel>) :
+class AppInstalledAdapter(itemList: List<AppModel>) :
     RecyclerView.Adapter<AppInstalledAdapter.ViewHolder>() {
 
+
+    private val teriak = mutableListOf<AppModel>().apply { addAll(itemList) }
+
+    fun addItems(items: List<AppModel>) {
+        teriak.addAll(items)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_item_app_list , parent , false)
@@ -17,13 +24,13 @@ class AppInstalledAdapter(private val itemList: List<AppModel>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val AppModel = itemList[position]
+        val AppModel = teriak[position]
         holder.imageView.setImageDrawable(AppModel.appIcon)
         holder.textView.text = AppModel.appName
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return teriak.size
     }
 
 

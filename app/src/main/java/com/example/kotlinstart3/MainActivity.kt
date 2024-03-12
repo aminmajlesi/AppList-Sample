@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-
         val recyclerview = findViewById<RecyclerView>(R.id.recyclerview)
 
         recyclerview.layoutManager = LinearLayoutManager(this)
@@ -30,11 +29,12 @@ class MainActivity : AppCompatActivity() {
         //1// itemList = ArrayList<AppModel>()
 
 
+        val adapter = AppInstalledAdapter(emptyList())
+
+        recyclerview.adapter = adapter
 
 
-
-
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Default) {
             val packageManager = packageManager
             val appsData =  // do all loading in background thread
                 packageManager.getInstalledPackages(0)
@@ -46,21 +46,8 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
 
-
-
-            for (result in appsData) {
-                (itemList as ArrayList<AppModel>).add(result)
-            }
-
+            withContext(Dispatchers.Main) { adapter.addItems(appsData) }
         }
-
-
-        val adapter = AppInstalledAdapter(itemList as ArrayList<AppModel>)
-
-        recyclerview.adapter = adapter
-
-
-
 
 
 //        runOnUiThread {
@@ -86,10 +73,7 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 
-
     }
-
-
 
 
 }
